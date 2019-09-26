@@ -2,7 +2,7 @@
     "name": "nealis/silex-test",
     "type": "project",
     "require": {
-        "silex/silex": "1"
+        "silex/silex": "^1"
     },
     "authors": [
         {
