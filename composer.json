@@ -1,0 +1,13 @@
+{
+    "name": "nealis/silex-test",
+    "type": "project",
+    "require": {
+        "silex/silex": "1"
+    },
+    "authors": [
+        {
+            "name": "Guido Sangiovanni",
+            "email": "sangiovanni.guido@gmail.com"
+        }
+    ]
+}
