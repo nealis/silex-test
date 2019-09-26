@@ -3,6 +3,25 @@
         <title>Prova Silex 2019</title>
     </head>
     <body>
-    <h1>Ancora Silex?!?</h1>
+        <h1>Ancora Silex?!?</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Titolo</th>
+                    <th>Autore</th>
+                    <th>Prezzo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for libro in libri %}
+                        <td>{{ libro.title }}</td>
+                        <td>{{ libro.author }}</td>
+                        <td>{{ libro.price }}</td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+
+        </table>
     </body>
 </html>

@@ -18,7 +18,7 @@ $app->register(new TwigServiceProvider(), [
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'driver'   => 'pdo_mysql',
-        'host' => '127.0.0.1',
+        'host' => '192.168.60.113',
         'dbname' => 'libri',
         'user' => 'root',
         'password' => 'root',
@@ -41,7 +41,8 @@ $db = $app['db'];
 
 $app->get('/', function(Request $request) use ($app) {
     $controller = new LibriController($app);
-    return new Response($controller->indexAction());
+    $risposta = $controller->indexAction();
+    return new Response($risposta);
 });
 
 $app->get('/libri', function (request $request) use ($app) {

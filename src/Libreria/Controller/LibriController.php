@@ -27,7 +27,10 @@ class LibriController
         /** @var Environment $twig */
         $twigEnvironment = $this->app['twig'];
         return $twigEnvironment->render(
-            'index.twig'
+            'index.twig',
+            [
+                'libri' => $data,
+            ]
         );
     }
 }
