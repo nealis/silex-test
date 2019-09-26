@@ -51,6 +51,7 @@ $app->get('/', function(Request $request) use ($twig, $db) {
             'index.twig'
         )
     );
+
 });
 
 $app->get('/libri', function (request $request) use ($app) {
