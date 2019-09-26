@@ -13,13 +13,15 @@
                 </tr>
             </thead>
             <tbody>
+                {% for libro in libri %}
                 <tr>
-                    {% for libro in libri %}
+
                         <td>{{ libro.title }}</td>
                         <td>{{ libro.author }}</td>
                         <td>{{ libro.price }}</td>
-                    {% endfor %}
+
                 </tr>
+                {% endfor %}
             </tbody>
 
         </table>

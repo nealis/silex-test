@@ -25,4 +25,10 @@ class Libri
         return $this->connection->fetchAll($selectStatement);
     }
 
+    public function insert($titolo, $autore, $prezzo)
+    {
+        $insertStatement = "INSERT INTO libri (title, author, price) VALUES ('$titolo', '$autore', $prezzo)";
+        return $this->connection->exec($insertStatement);
+    }
+
 }

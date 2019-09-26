@@ -18,7 +18,7 @@ $app->register(new TwigServiceProvider(), [
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'driver'   => 'pdo_mysql',
-        'host' => '192.168.60.113',
+        'host' => '127.0.0.1',
         'dbname' => 'libri',
         'user' => 'root',
         'password' => 'root',
@@ -42,6 +42,15 @@ $db = $app['db'];
 $app->get('/', function(Request $request) use ($app) {
     $controller = new LibriController($app);
     $risposta = $controller->indexAction();
+    return new Response($risposta);
+});
+
+$app->post('/insert', function(Request $request) use ($app){
+    $titolo = $request->request->get('titolo');
+    $autore = $request->request->get('autore');
+    $prezzo = $request->request->get('prezzo');
+    $controller = new LibriController($app);
+    $risposta = $controller->insertAction($titolo,$autore,$prezzo);
     return new Response($risposta);
 });
 

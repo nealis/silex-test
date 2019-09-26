@@ -33,4 +33,15 @@ class LibriController
             ]
         );
     }
+
+    public function insertAction($titolo,$autore,$prezzo)
+    {
+        $model = new Libri($this->app['db']);
+        $insertResult = $model->insert($titolo,$autore,$prezzo);
+        if($insertResult){
+            return 'Successo';
+        } else{
+            return 'Insert non riuscito';
+        }
+    }
 }
