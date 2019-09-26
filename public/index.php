@@ -10,21 +10,6 @@ require_once('../vendor/autoload.php');
 $app = new Application();
 $app['password'] = 'guido';
 
-
-$user = 'root';
-$password = 'root';
-$db = 'libri';
-$host = '127.0.0.1';
-$port = 8889;
-
-$connection = mysqli_connect(
-   $host,
-   $user,
-   $password,
-   $db,
-   $port
-);
-
 $app->register(new TwigServiceProvider(), [
     'twig.path' => __DIR__ .'/../views/',
 ]);
