@@ -1,5 +1,6 @@
 <?php
 
+use Libreria\Controller\LibriController;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,20 +39,9 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
 $twig = $app['twig'];
 $db = $app['db'];
 
-$app->get('/', function(Request $request) use ($twig, $db) {
-    
-    $sql = "SELECT * FROM libri";
-
-    $libri = $db->fetchAll($sql);
-    foreach ($libri as $libro) {
-        echo $libro['title']."</br> ";
-    }
-    return new Response(
-        $twig->render(
-            'index.twig'
-        )
-    );
-
+$app->get('/', function(Request $request) use ($app) {
+    $controller = new LibriController($app);
+    return new Response($controller->indexAction());
 });
 
 $app->get('/libri', function (request $request) use ($app) {
