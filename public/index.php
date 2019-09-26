@@ -14,7 +14,7 @@ $app['password'] = 'guido';
 $user = 'root';
 $password = 'root';
 $db = 'libri';
-$host = 'localhost';
+$host = '127.0.0.1';
 $port = 8889;
 
 $connection = mysqli_connect(
@@ -32,8 +32,8 @@ $app->register(new TwigServiceProvider(), [
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'driver'   => 'pdo_mysql',
-        'host' => 'localhost',
-        'dbname' => 'asdasdsad',
+        'host' => '127.0.0.1',
+        'dbname' => 'libri',
         'user' => 'root',
         'password' => 'root',
         'port' => 8889,
