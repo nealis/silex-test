@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Prova Silex 2019</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     </head>
     <body>
     <h1>Libri</h1>
@@ -35,8 +36,29 @@
         </tbody>
 
     </table>
-    <form action="/edit" method="POST">
-        <button type="submit">Inserisci</button>
+    <form>
+        <input type="button" onclick="showForm()" value="Inserisci"/>
+        <hr>
+        <div id="insertNewBook" hidden method="post">
+            Titolo
+            <input id="titolo" type="text">
+            Autore
+            <input id="autore" type="text">
+            Prezzo
+            <input id="prezzo" type="text">
+
+            <button type="submit">Salva</button>
+        </div>
     </form>
     </body>
 </html>
+
+<script>
+    function showForm() {
+        if ( $('#insertNewBook').is(":hidden")){
+            $('#insertNewBook').show();
+        } else {
+            $('#insertNewBook').hide();
+        }
+    }
+</script>
