@@ -36,6 +36,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
 //        return new Response('PASSWORD ERRATA!');
 //    }
 //});
+
 $twig = $app['twig'];
 $db = $app['db'];
 
@@ -51,24 +52,13 @@ $app->post('/insert', function(Request $request) use ($app){
     $prezzo = $request->request->get('prezzo');
     $controller = new LibriController($app);
     $risposta = $controller->insertAction($titolo,$autore,$prezzo);
+    return new \Symfony\Component\HttpFoundation\RedirectResponse('/');
+});
+
+$app->get('/edit', function(Request $request) use ($app) {
+    $controller = new LibriController($app);
+    $risposta = $controller->saveAction();
     return new Response($risposta);
 });
-
-$app->get('/libri', function (request $request) use ($app) {
-
-});
-
-$app->get('/salutami/{nomeUtente}', function(Request $request, $nomeUtente) use ($app) {
-    /** @var Environment $twig */
-    $twig = $app['twig'];
-    return new Response(
-        $twig->render(
-            'saluto.twig', [
-                'nomeUtente' => $nomeUtente
-            ]
-        )
-    );
-});
-
 
 $app->run();

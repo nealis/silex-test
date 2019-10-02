@@ -34,6 +34,14 @@ class LibriController
         );
     }
 
+    public function saveAction()
+    {
+        $twigEnvironment = $this->app['twig'];
+        return $twigEnvironment->render(
+            'edit.twig'
+        );
+    }
+
     public function insertAction($titolo,$autore,$prezzo)
     {
         $model = new Libri($this->app['db']);
