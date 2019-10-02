@@ -1,0 +1,22 @@
+{
+  "name": "silex-test",
+  "version": "1.0.0",
+  "description": "Per utilizzare il progetto: 1. Installare Mysql e creare un database \"libri\" con utente \"root\" e password \"root\" IN ALTERNATIVA AL PUNTO 1. 1b. installare Docker     lanciare docker-compose up -d",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nealis/silex-test.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nealis/silex-test/issues"
+  },
+  "homepage": "https://github.com/nealis/silex-test#readme",
+  "dependencies": {
+    "jquery": "^3.4.1"
+  }
+}

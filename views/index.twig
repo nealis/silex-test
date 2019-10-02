@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>Prova Silex 2019</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     </head>
     <body>
     <h1>Libri</h1>
@@ -22,7 +22,7 @@
                 <td>
                     <form action="/delete" method="POST">
                         <input type="text" name="id" value="{{ libro.id }}" hidden/>
-                        <input type="button" value="Cancella"/>
+                        <input type="submit" value="Cancella"/>
                     </form>
                 </td>
                 <td>
@@ -36,17 +36,17 @@
         </tbody>
 
     </table>
-    <form>
+    <form method="post" action="/save">
         <input type="button" onclick="toggleForm(false)" value="Inserisci"/>
         <hr>
-        <div id="insertNewBook" hidden method="post">
-
+        <div id="insertNewBook" hidden >
+            <input hidden name="id" id ="id" />
             Titolo
-            <input id="titolo" type="text">
+            <input name="titolo" id="titolo" type="text">
             Autore
-            <input id="autore" type="text">
+            <input name="autore" id="autore" type="text">
             Prezzo
-            <input id="prezzo" type="text">
+            <input name="prezzo" id="prezzo" type="text">
 
             <button type="submit">Salva</button>
         </div>
@@ -61,6 +61,7 @@
             var title = tr.children(0)[0].innerHTML;
             var author = tr.children(0)[1].innerHTML;
             var price = tr.children(0)[2].innerHTML;
+            $("#id").val(rowId);
             $("#titolo").val(title);
             $("#autore").val(author);
             $("#prezzo").val(price);
