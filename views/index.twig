@@ -15,20 +15,20 @@
         </thead>
         <tbody>
         {% for libro in libri %}
-            <tr>
-                <td>{{ libro.title }}</td>
-                <td>{{ libro.author }}</td>
-                <td>{{ libro.price }}</td>
+            <tr id="bookRow{{ libro.id }}">
+                <td id="titleTd">{{ libro.title }}</td>
+                <td id="authorTd">{{ libro.author }}</td>
+                <td id="priceTd">{{ libro.price }}</td>
                 <td>
                     <form action="/delete" method="POST">
                         <input type="text" name="id" value="{{ libro.id }}" hidden/>
-                        <button>Cancella</button>
+                        <input type="button" value="Cancella"/>
                     </form>
                 </td>
                 <td>
                     <form action="/edit" method="POST">
                         <input type="text" name="id_edit" value="{{ libro.id }}" hidden/>
-                        <button>Modifica</button>
+                        <input id="{{ libro.id }}" onClick="toggleForm({{ libro.id }})" type="button" value="Modifica"/>
                     </form>
                 </td>
             </tr>
@@ -37,9 +37,10 @@
 
     </table>
     <form>
-        <input type="button" onclick="showForm()" value="Inserisci"/>
+        <input type="button" onclick="toggleForm(false)" value="Inserisci"/>
         <hr>
         <div id="insertNewBook" hidden method="post">
+
             Titolo
             <input id="titolo" type="text">
             Autore
@@ -54,7 +55,16 @@
 </html>
 
 <script>
-    function showForm() {
+    function toggleForm(rowId) {
+        if (rowId) {
+            var tr = $('#bookRow'+rowId);
+            var title = tr.children(0)[0].innerHTML;
+            var author = tr.children(0)[1].innerHTML;
+            var price = tr.children(0)[2].innerHTML;
+            $("#titolo").val(title);
+            $("#autore").val(author);
+            $("#prezzo").val(price);
+        }
         if ( $('#insertNewBook').is(":hidden")){
             $('#insertNewBook').show();
         } else {
