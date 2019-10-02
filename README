@@ -1,0 +1,9 @@
+Per utilizzare il progetto:
+1. Installare Mysql e creare un database "libri" con utente "root" e password "root"
+IN ALTERNATIVA AL PUNTO 1.
+1b. installare Docker
+    lanciare docker-compose up -d
+
+
+2. connettersi al database e creare la tabella libri utilizzando la query presente in resources/database.sql
+3. eseguire dalla cartella del progetto il comando php -S localhost:8080 -t public
