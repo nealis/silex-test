@@ -19,6 +19,12 @@
                         <td>{{ libro.title }}</td>
                         <td>{{ libro.author }}</td>
                         <td>{{ libro.price }}</td>
+                        <td>
+                            <form action="/delete">
+                                <input type="text" name="id" value="{{ libro.id }}" hidden>
+                                <button>Cancella</button>
+                            </form>
+                        </td>
 
                 </tr>
                 {% endfor %}
