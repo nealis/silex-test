@@ -36,4 +36,10 @@ class Libri
         $deleteStatement = "DELETE FROM libri WHERE id = $id";
         return $this->connection->exec($deleteStatement);
     }
+
+    public function edit($id, $titolo, $autore, $prezzo)
+    {
+        $editStatement = "UPDATE libri SET title = '$titolo', author = '$autore', price = $prezzo WHERE id = $id";
+        return $this->connection->exec($editStatement);
+    }
 }

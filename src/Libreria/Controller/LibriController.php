@@ -53,6 +53,17 @@ class LibriController
         }
     }
 
+    public function editAction($id, $titolo, $autore, $prezzo)
+    {
+        $model = new Libri($this->app['db']);
+        $editResult = $model->edit($id, $titolo,$autore,$prezzo);
+        if($editResult){
+            return 'Successo';
+        } else{
+            return 'Insert non riuscito';
+        }
+    }
+
     public function deleteAction($id)
     {
         $model = new Libri($this->app['db']);

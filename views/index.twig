@@ -24,6 +24,10 @@
                                 <input type="text" name="id" value="{{ libro.id }}" hidden>
                                 <button>Cancella</button>
                             </form>
+                            <form action="/save" method="post">
+                                <input type="text" name="id_edit" value="{{ libro.id }}" hidden>
+                                <button>Modifica</button>
+                            </form>
                         </td>
 
                 </tr>
@@ -31,7 +35,7 @@
             </tbody>
 
         </table>
-        <form action="/edit">
+        <form action="/save">
             <button type="submit">Inserisci</button>
         </form>
     </body>

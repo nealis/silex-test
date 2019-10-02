@@ -55,7 +55,7 @@ $app->post('/insert', function(Request $request) use ($app){
     return new \Symfony\Component\HttpFoundation\RedirectResponse('/');
 });
 
-$app->get('/edit', function(Request $request) use ($app) {
+$app->get('/save', function(Request $request) use ($app) {
     $controller = new LibriController($app);
     $risposta = $controller->saveAction();
     return new Response($risposta);
