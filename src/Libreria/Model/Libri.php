@@ -25,6 +25,12 @@ class Libri
         return $this->connection->fetchAll($selectStatement);
     }
 
+    public function readPerId($id)
+    {
+        $selectStatement = "SELECT * FROM libri WHERE id = $id";
+        return $this->connection->fetchAll($selectStatement);
+    }
+
     public function insert($titolo, $autore, $prezzo)
     {
         $insertStatement = "INSERT INTO libri (title, author, price) VALUES ('$titolo', '$autore', $prezzo)";

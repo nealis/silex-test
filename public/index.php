@@ -55,10 +55,28 @@ $app->post('/insert', function(Request $request) use ($app){
     return new \Symfony\Component\HttpFoundation\RedirectResponse('/');
 });
 
-$app->get('/save', function(Request $request) use ($app) {
+$app->post('/modifica', function(Request $request) use ($app){
+    $id = $request->request->get('id');
+    $titolo = $request->request->get('titolo');
+    $autore = $request->request->get('autore');
+    $prezzo = $request->request->get('prezzo');
     $controller = new LibriController($app);
-    $risposta = $controller->saveAction();
-    return new Response($risposta);
+    $controller = new LibriController($app);
+    $risposta = $controller->modificaAction($id,$titolo,$autore,$prezzo);
+    return new \Symfony\Component\HttpFoundation\RedirectResponse('/');
+});
+
+$app->post('/save', function(Request $request) use ($app) {
+    $id = $request->request->get('id_edit');
+    if($id) {
+        $controller = new LibriController($app);
+        $risposta = $controller->editAction($id);
+        return new Response($risposta);
+    } else {
+        $controller = new LibriController($app);
+        $risposta = $controller->editAction();
+        return new Response($risposta);
+    }
 });
 
 $app->post ('/delete' ,function(Request $request) use ($app) {

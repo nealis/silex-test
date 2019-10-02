@@ -5,6 +5,20 @@
 <body>
 <h1>Modifica Libro</h1>
 <div>
+
+    {% if id %}
+    <form action="/modifica" method="post">
+        <input name="id" hidden value = '{{ id }}'>
+        Titolo
+        <input name="titolo" type="text" value = '{{ titolo }}'>
+        Autore
+        <input name="autore" type="text" value = '{{ autore }}'>
+        Prezzo
+        <input name="prezzo" type="text" value = '{{ prezzo }}'>
+
+        <button type="submit">Salva</button>
+    </form>
+    {% else %}
     <form action="/insert" method="post">
         Titolo
         <input name="titolo" type="text">
@@ -15,6 +29,7 @@
 
         <button type="submit">Salva</button>
     </form>
+    {% endif %}
 </div>
 </body>
 </html>

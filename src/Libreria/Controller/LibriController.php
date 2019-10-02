@@ -34,18 +34,32 @@ class LibriController
         );
     }
 
-    public function saveAction()
+    public function editAction($id = null)
     {
+        if($id) {
+        $model = new Libri($this->app['db']);
+        $data = $model->readPerId($id);
         $twigEnvironment = $this->app['twig'];
         return $twigEnvironment->render(
-            'edit.twig'
-        );
+            'edit.twig',
+            [
+                'id'=> $data[0]['id'],
+                'titolo'=> $data[0]['title'],
+                'autore'=> $data[0]['author'],
+                'prezzo'=> $data[0]['price'],
+            ]
+        ); } else {
+            $twigEnvironment = $this->app['twig'];
+            return $twigEnvironment->render(
+                'edit.twig'
+            );
+        }
     }
 
-    public function insertAction($titolo,$autore,$prezzo)
+    public function modificaAction($id,$titolo,$autore,$prezzo)
     {
         $model = new Libri($this->app['db']);
-        $insertResult = $model->insert($titolo,$autore,$prezzo);
+        $insertResult = $model->edit($id,$titolo,$autore,$prezzo);
         if($insertResult){
             return 'Successo';
         } else{
@@ -53,11 +67,11 @@ class LibriController
         }
     }
 
-    public function editAction($id, $titolo, $autore, $prezzo)
+    public function insertAction($titolo,$autore,$prezzo)
     {
         $model = new Libri($this->app['db']);
-        $editResult = $model->edit($id, $titolo,$autore,$prezzo);
-        if($editResult){
+        $insertResult = $model->insert($titolo,$autore,$prezzo);
+        if($insertResult){
             return 'Successo';
         } else{
             return 'Insert non riuscito';
