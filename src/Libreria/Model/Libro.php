@@ -6,13 +6,13 @@ namespace Libreria\Model;
 
 use Doctrine\DBAL\Connection;
 
-class Libri
+class Libro
 {
     /** @var Connection */
     private $connection;
 
     /**
-     * Libri constructor.
+     * Libro constructor.
      */
     public function __construct(Connection $connection)
     {
@@ -21,31 +21,31 @@ class Libri
 
     public function read()
     {
-        $selectStatement = 'SELECT * FROM libri';
+        $selectStatement = 'SELECT * FROM libro';
         return $this->connection->fetchAll($selectStatement);
     }
 
-    public function readPerId($id)
+    public function readById($id)
     {
-        $selectStatement = "SELECT * FROM libri WHERE id = $id";
-        return $this->connection->fetchAll($selectStatement);
+        $selectStatement = "SELECT * FROM libro WHERE id = $id";
+        return $this->connection->fetchAssoc($selectStatement);
     }
 
     public function insert($titolo, $autore, $prezzo)
     {
-        $insertStatement = "INSERT INTO libri (title, author, price) VALUES ('$titolo', '$autore', $prezzo)";
+        $insertStatement = "INSERT INTO libro (title, author, price) VALUES ('$titolo', '$autore', $prezzo)";
         return $this->connection->exec($insertStatement);
     }
 
     public function delete($id)
     {
-        $deleteStatement = "DELETE FROM libri WHERE id = $id";
+        $deleteStatement = "DELETE FROM libro WHERE id = $id";
         return $this->connection->exec($deleteStatement);
     }
 
     public function edit($id, $titolo, $autore, $prezzo)
     {
-        $editStatement = "UPDATE libri SET title = '$titolo', author = '$autore', price = $prezzo WHERE id = $id";
+        $editStatement = "UPDATE libro SET title = '$titolo', author = '$autore', price = $prezzo WHERE id = $id";
         return $this->connection->exec($editStatement);
     }
 }

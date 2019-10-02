@@ -3,42 +3,40 @@
         <title>Prova Silex 2019</title>
     </head>
     <body>
-        <h1>Libri</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Titolo</th>
-                    <th>Autore</th>
-                    <th>Prezzo</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for libro in libri %}
-                <tr>
+    <h1>Libri</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Titolo</th>
+            <th>Autore</th>
+            <th>Prezzo</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for libro in libri %}
+            <tr>
+                <td>{{ libro.title }}</td>
+                <td>{{ libro.author }}</td>
+                <td>{{ libro.price }}</td>
+                <td>
+                    <form action="/delete" method="POST">
+                        <input type="text" name="id" value="{{ libro.id }}" hidden/>
+                        <button>Cancella</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="/edit" method="POST">
+                        <input type="text" name="id_edit" value="{{ libro.id }}" hidden/>
+                        <button>Modifica</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
 
-                        <td>{{ libro.title }}</td>
-                        <td>{{ libro.author }}</td>
-                        <td>{{ libro.price }}</td>
-                        <td>
-                            <form action="/delete" method="post">
-                                <input type="text" name="id" value="{{ libro.id }}" hidden>
-                                <button>Cancella</button>
-                            </form>
-                        </td>
-                        <td>
-                            <form action="/save" method="post">
-                                <input type="text" name="id_edit" value="{{ libro.id }}" hidden>
-                                <button>Modifica</button>
-                            </form>
-                        </td>
-
-                </tr>
-                {% endfor %}
-            </tbody>
-
-        </table>
-        <form action="/save" method="post">
-            <button type="submit">Inserisci</button>
-        </form>
+    </table>
+    <form action="/edit" method="POST">
+        <button type="submit">Inserisci</button>
+    </form>
     </body>
 </html>

@@ -6,15 +6,15 @@
 <h1>Modifica Libro</h1>
 <div>
 
-    {% if id %}
+    {% if libro %}
     <form action="/modifica" method="post">
-        <input name="id" hidden value = '{{ id }}'>
+        <input name="id" hidden value = '{{ libro.id }}'>
         Titolo
-        <input name="titolo" type="text" value = '{{ titolo }}'>
+        <input name="titolo" type="text" value = '{{ libro.title }}'>
         Autore
-        <input name="autore" type="text" value = '{{ autore }}'>
+        <input name="autore" type="text" value = '{{ libro.author }}'>
         Prezzo
-        <input name="prezzo" type="text" value = '{{ prezzo }}'>
+        <input name="prezzo" type="text" value = '{{ libro.price }}'>
 
         <button type="submit">Salva</button>
     </form>

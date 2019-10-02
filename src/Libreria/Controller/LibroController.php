@@ -2,17 +2,17 @@
 
 namespace Libreria\Controller;
 
-use Libreria\Model\Libri;
+use Libreria\Model\Libro;
 use Silex\Application;
 use Twig\Environment;
 
-class LibriController
+class LibroController
 {
     /** @var Application */
     private $app;
 
     /**
-     * LibriController constructor.
+     * LibroController constructor.
      */
     public function __construct(Application $app)
     {
@@ -21,14 +21,13 @@ class LibriController
 
     public function indexAction()
     {
-        $model = new Libri($this->app['db']);
+        $model = new Libro($this->app['db']);
         $data = $model->read();
 
         /** @var Environment $twig */
         $twigEnvironment = $this->app['twig'];
         return $twigEnvironment->render(
-            'index.twig',
-            [
+            'index.twig', [
                 'libri' => $data,
             ]
         );
@@ -36,19 +35,16 @@ class LibriController
 
     public function editAction($id = null)
     {
-        if($id) {
-        $model = new Libri($this->app['db']);
-        $data = $model->readPerId($id);
-        $twigEnvironment = $this->app['twig'];
-        return $twigEnvironment->render(
-            'edit.twig',
-            [
-                'id'=> $data[0]['id'],
-                'titolo'=> $data[0]['title'],
-                'autore'=> $data[0]['author'],
-                'prezzo'=> $data[0]['price'],
-            ]
-        ); } else {
+        if ($id) {
+            $model = new Libro($this->app['db']);
+            $libro = $model->readById($id);
+            $twigEnvironment = $this->app['twig'];
+            return $twigEnvironment->render(
+                'edit.twig', [
+                    'libro' => $libro,
+                ]
+            );
+        } else {
             $twigEnvironment = $this->app['twig'];
             return $twigEnvironment->render(
                 'edit.twig'
@@ -56,9 +52,9 @@ class LibriController
         }
     }
 
-    public function modificaAction($id,$titolo,$autore,$prezzo)
+    public function modificaAction($id, $titolo, $autore, $prezzo)
     {
-        $model = new Libri($this->app['db']);
+        $model = new Libro($this->app['db']);
         $insertResult = $model->edit($id,$titolo,$autore,$prezzo);
         if($insertResult){
             return 'Successo';
@@ -69,7 +65,7 @@ class LibriController
 
     public function insertAction($titolo,$autore,$prezzo)
     {
-        $model = new Libri($this->app['db']);
+        $model = new Libro($this->app['db']);
         $insertResult = $model->insert($titolo,$autore,$prezzo);
         if($insertResult){
             return 'Successo';
@@ -80,7 +76,7 @@ class LibriController
 
     public function deleteAction($id)
     {
-        $model = new Libri($this->app['db']);
+        $model = new Libro($this->app['db']);
         $deleteResult = $model->delete($id);
         if($deleteResult){
             return 'Successo';
