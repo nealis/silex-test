@@ -64,6 +64,10 @@
             $("#titolo").val(title);
             $("#autore").val(author);
             $("#prezzo").val(price);
+        } else {
+            $("#titolo").val(null);
+            $("#autore").val(null);
+            $("#prezzo").val(null);
         }
         if ( $('#insertNewBook').is(":hidden")){
             $('#insertNewBook').show();
