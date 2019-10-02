@@ -52,4 +52,15 @@ class LibriController
             return 'Insert non riuscito';
         }
     }
+
+    public function deleteAction($id)
+    {
+        $model = new Libri($this->app['db']);
+        $deleteResult = $model->delete($id);
+        if($deleteResult){
+            return 'Successo';
+        } else{
+            return 'Delete non riuscita';
+        }
+    }
 }

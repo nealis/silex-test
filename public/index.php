@@ -61,4 +61,11 @@ $app->get('/edit', function(Request $request) use ($app) {
     return new Response($risposta);
 });
 
+$app->post ('/delete' ,function(Request $request) use ($app) {
+    $id = $request->request->get('id');
+    $controller = new LibriController($app);
+    $risposta = $controller->deleteAction($id);
+    return new \Symfony\Component\HttpFoundation\RedirectResponse('/');
+});
+
 $app->run();

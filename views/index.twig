@@ -20,7 +20,7 @@
                         <td>{{ libro.author }}</td>
                         <td>{{ libro.price }}</td>
                         <td>
-                            <form action="/delete">
+                            <form action="/delete" method="post">
                                 <input type="text" name="id" value="{{ libro.id }}" hidden>
                                 <button>Cancella</button>
                             </form>

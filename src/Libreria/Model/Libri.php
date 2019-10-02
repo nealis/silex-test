@@ -31,4 +31,9 @@ class Libri
         return $this->connection->exec($insertStatement);
     }
 
+    public function delete($id)
+    {
+        $deleteStatement = "DELETE FROM libri WHERE id = $id";
+        return $this->connection->exec($deleteStatement);
+    }
 }
