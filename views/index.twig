@@ -172,7 +172,10 @@
     });
 
     function clearAndHide() {
+            $('#titoloFilter').val("");
+            $('#autoreFilter').val("");
         readBooks();
+
         if ($('#formFilter').is(":hidden")){
             $('#formFilter').show();
         } else {

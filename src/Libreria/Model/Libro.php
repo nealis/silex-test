@@ -23,7 +23,7 @@ class Libro
     {
         $titolo = $filters['titolo'];
         $autore = $filters['autore'];
-        $selectStatement = "SELECT * FROM libro WHERE title LIKE '$ti   tolo%' AND author LIKE '$autore%'";
+        $selectStatement = "SELECT * FROM libro WHERE title LIKE '$titolo%' AND author LIKE '$autore%'";
         return $this->connection->fetchAll($selectStatement);
     }
 
