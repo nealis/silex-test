@@ -4,7 +4,6 @@ use Libreria\Controller\LibroController;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Silex\Provider\DoctrineServiceProvider;
@@ -43,37 +42,32 @@ $app->post('/save', function(Request $request) use ($app){
     $prezzo = $request->request->get('prezzo');
     $controller = new LibroController($app);
     if ($id == null) {
-        $controller->insertAction($titolo,$autore,$prezzo);
+        $result = $controller->insertAction($titolo,$autore,$prezzo);
     } else {
-        $controller->modificaAction($id, $titolo, $autore, $prezzo);
+        $result = $controller->modificaAction($id, $titolo, $autore, $prezzo);
     }
-    return new RedirectResponse('/');
-});
-
-$app->post('/edit', function(Request $request) use ($app) {
-    $id = $request->request->get('id_edit');
-    if($id) {
-        $controller = new LibroController($app);
-        $risposta = $controller->editAction($id);
-        return new Response($risposta);
-    } else {
-        $controller = new LibroController($app);
-        $risposta = $controller->editAction();
-        return new Response($risposta);
-    }
+    return new JsonResponse($result);
 });
 
 $app->post ('/delete' ,function(Request $request) use ($app) {
     $id = $request->request->get('id');
     $controller = new LibroController($app);
-    $controller->deleteAction($id);
-    return new RedirectResponse('/');
+    $result = $controller->deleteAction($id);
+    return new JsonResponse($result);
 });
 
 $app->post ('/read', function (Request $request) use ($app) {
+    $filters = $request->request->get('filters');
+    if (is_null($filters)) {
+        $filters = [
+            'title' => '',
+            'author' => '',
+        ];
+    }
     $controller = new LibroController($app);
-    $result = $controller->readAction();
+    $result = $controller->readAction($filters);
     return new JsonResponse($result);
 });
+
 
 $app->run();

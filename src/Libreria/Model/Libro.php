@@ -19,9 +19,11 @@ class Libro
         $this->connection = $connection;
     }
 
-    public function read()
+    public function read($filters)
     {
-        $selectStatement = 'SELECT * FROM libro';
+        $titolo = $filters['titolo'];
+        $autore = $filters['autore'];
+        $selectStatement = "SELECT * FROM libro WHERE title LIKE '$ti   tolo%' AND author LIKE '$autore%'";
         return $this->connection->fetchAll($selectStatement);
     }
 

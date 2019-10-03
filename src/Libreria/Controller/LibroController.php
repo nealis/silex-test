@@ -21,79 +21,67 @@ class LibroController
 
     public function indexAction()
     {
-        $model = new Libro($this->app['db']);
-
-        $data = $model->read();
         /** @var Environment $twig */
         $twigEnvironment = $this->app['twig'];
         return $twigEnvironment->render(
-            'index.twig', [
-                'libri' => $data,
-            ]
+            'index.twig'
         );
-    }
-
-    public function editAction($id = null)
-    {
-        if ($id) {
-            $model = new Libro($this->app['db']);
-            $libro = $model->readById($id);
-            $twigEnvironment = $this->app['twig'];
-            return $twigEnvironment->render(
-                'edit.twig', [
-                    'libro' => $libro,
-                ]
-            );
-        } else {
-            $twigEnvironment = $this->app['twig'];
-            return $twigEnvironment->render(
-                'edit.twig'
-            );
-        }
     }
 
     public function modificaAction($id, $titolo, $autore, $prezzo)
     {
         $model = new Libro($this->app['db']);
-        $insertResult = $model->edit($id,$titolo,$autore,$prezzo);
-        if($insertResult){
-            return 'Successo';
-        } else{
-            return 'Insert non riuscito';
-        }
+        $modificaResult = $model->edit($id,$titolo,$autore,$prezzo);
+        $array = [
+            'success' => $modificaResult != 0,
+            'errors' => $modificaResult == 0,
+        ];
+        return $array;
     }
 
     public function insertAction($titolo,$autore,$prezzo)
     {
         $model = new Libro($this->app['db']);
         $insertResult = $model->insert($titolo,$autore,$prezzo);
-        if($insertResult){
-            return 'Successo';
-        } else{
-            return 'Insert non riuscito';
-        }
+        $array = [
+            'success' => $insertResult != 0,
+            'errors' => $insertResult == 0,
+        ];
+        return $array;
     }
 
     public function deleteAction($id)
     {
         $model = new Libro($this->app['db']);
         $deleteResult = $model->delete($id);
-        if($deleteResult){
-            return 'Successo';
-        } else{
-            return 'Delete non riuscita';
-        }
+        $array = [
+            'success' => $deleteResult != 0,
+            'errors' => $deleteResult == 0,
+        ];
+        return $array;
     }
 
-    public function readAction()
+    public function readAction($filters)
     {
         $model = new Libro($this->app['db']);
-        $data = $model->read();
+        $data = $model->read($filters);
         $count = count($data);
         $array = [
             'success' => $count >= 0,
             'data' => $data,
             'errors' => $count <= 0 ? ["Errore in lettura"] : [],
+        ];
+        return $array;
+    }
+
+    public function filterAction($filters)
+    {
+        $model = new Libro($this->app['db']);
+        $filterResult = $model->read($filters);
+        $array = [
+            'success' => $filterResult != 0,
+            'data' => $filterResult,
+            'errors' => $filterResult == 0,
         ];
         return $array;
     }

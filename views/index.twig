@@ -5,7 +5,15 @@
     </head>
     <body>
     <h1>Libri</h1>
-    <input type="button" value="refresh" onclick="readBooks()"/>
+        <input type="button" value="filtra" id="filtra" onclick="hideshow()"/>
+            <form id="formFilter" hidden>
+                Titolo
+            <input name="titolo" id="titoloFilter" type="text" />
+                Autore
+            <input name="titolo" id="autoreFilter" type="text" />
+            <input type="button" onclick="filterBooks()" value="Salva" />
+                <input type="button" onclick="clearAndHide()" value="Clear" />
+            </form>
     <table id="tabellaLibri">
         <thead>
         <tr>
@@ -15,29 +23,10 @@
         </tr>
         </thead>
         <tbody id="tbodyLibri">
-        {% for libro in libri %}
-            <tr id="bookRow{{ libro.id }}">
-                <td id="titleTd">{{ libro.title }}</td>
-                <td id="authorTd">{{ libro.author }}</td>
-                <td id="priceTd">{{ libro.price }}</td>
-                <td>
-                    <form action="/delete" method="POST">
-                        <input type="text" name="id" value="{{ libro.id }}" hidden/>
-                        <input type="submit" value="Cancella"/>
-                    </form>
-                </td>
-                <td>
-                    <form action="/edit" method="POST">
-                        <input type="text" name="id_edit" value="{{ libro.id }}" hidden/>
-                        <input id="{{ libro.id }}" onClick="toggleForm({{ libro.id }})" type="button" value="Modifica"/>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
         </tbody>
 
     </table>
-    <form method="post" action="/save">
+    <form>
         <input type="button" onclick="toggleForm(false)" value="Inserisci"/>
         <hr>
         <div id="insertNewBook" hidden >
@@ -49,7 +38,7 @@
             Prezzo
             <input name="prezzo" id="prezzo" type="text">
 
-            <button type="submit">Salva</button>
+            <input type="button" onclick="saveBook()" value="Salva" />
         </div>
     </form>
     </body>
@@ -58,10 +47,10 @@
 <script>
     function toggleForm(rowId) {
         if (rowId) {
-            var tr = $('#bookRow'+rowId);
-            var title = tr.children(0)[0].innerHTML;
-            var author = tr.children(0)[1].innerHTML;
-            var price = tr.children(0)[2].innerHTML;
+            var title = $(`#bookRow${rowId} .titleTd`).html();
+            var author = $('#bookRow'+rowId+ " .authorTd").html();
+            var price = $('#bookRow'+rowId+ " .priceTd").html();
+
             $("#id").val(rowId);
             $("#titolo").val(title);
             $("#autore").val(author);
@@ -71,7 +60,7 @@
             $("#autore").val(null);
             $("#prezzo").val(null);
         }
-        if ( $('#insertNewBook').is(":hidden")){
+        if ($('#insertNewBook').is(":hidden")){
             $('#insertNewBook').show();
         } else {
             $('#insertNewBook').hide();
@@ -79,30 +68,25 @@
     }
 
     function readBooks() {
+        $("#tbodyLibri").empty();
         $.ajax('/read',
             {
                 method: 'POST',
                 dataType: 'json',
-                success: function(response) {
-                    $("#tbodyLibri").empty();
-                    $.each(response.data, function(contatore, row) {
-
+                success: function(response)
+                {
+                    $.each(response.data, function(contatore, row)
+                    {
                         $("#tbodyLibri").append(
                             `<tr id="bookRow${row.id}">
-                                <td id="titleTd">${row.title}</td>
-                                <td id="authorTd">${row.author}</td>
-                                <td id="priceTd">${row.price}</td>
+                                <td class="titleTd">${row.title}</td>
+                                <td class="authorTd">${row.author}</td>
+                                <td class="priceTd">${row.price}</td>
                                 <td>
-                                    <form action="/delete" method="POST">
-                                        <input type="text" name="id" value=" ${row.id}" hidden/>
-                                        <input type="submit" value="Cancella"/>
-                                    </form>
+                                        <input type="button" name="bottoneCancella" value="Cancella" onclick="deleteBook(${row.id})"/>
                                 </td>
                                 <td>
-                                    <form action="/edit" method="POST">
-                                        <input type="text" name="id_edit" value="${row.id}" hidden/>
-                                        <input id="${row.id}" onClick="toggleForm(${row.id})" type="button" value="Modifica"/>
-                                    </form>
+                                        <input type="button" name="bottoneModifica" value="Modifica" onclick="toggleForm(${row.id})"/>
                                 </td>
                             </tr>`)
                     });
@@ -110,4 +94,98 @@
             }
         )
     }
+
+    function filterBooks() {
+        var titolo = $('#titoloFilter').val();
+        var autore = $('#autoreFilter').val();
+        $("#tbodyLibri").empty();
+        $.ajax('/read',
+            {
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    filters : {
+                        titolo : titolo,
+                        autore : autore,
+                    }
+                },
+                success: function (response)
+                {
+                    $.each(response.data, function(contatore, row)
+                    {
+                        $("#tbodyLibri").append(
+                            `<tr>
+                                <td>${row.title}</td>
+                                <td>${row.author}</td>
+                                <td>${row.price}</td>
+                            </tr>`)
+                    });
+                }
+            }
+        )
+    }
+
+    function deleteBook(id) {
+        //console.log(id);
+        $.ajax('/delete',
+            {
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    id : id
+                },
+                success: function(response)
+                {
+                    readBooks();
+                }
+
+            })
+    }
+
+    function saveBook() {
+        var id = $('#id').val();
+        var titolo = $('#titolo').val();
+        var autore = $('#autore').val();
+        var prezzo = $('#prezzo').val();
+
+        $.ajax('/save',
+            {
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    id : id,
+                    titolo : titolo,
+                    autore : autore,
+                    prezzo : prezzo
+                },
+                success: function(response)
+                {
+                    $('#id').val("");
+                    $('#insertNewBook').hide();
+                    readBooks();
+                }
+            })
+    }
+
+    $(function() {
+        readBooks();
+    });
+
+    function clearAndHide() {
+        readBooks();
+        if ($('#formFilter').is(":hidden")){
+            $('#formFilter').show();
+        } else {
+            $('#formFilter').hide();
+        }
+    }
+
+    function hideshow() {
+        if ($('#formFilter').is(":hidden")){
+            $('#formFilter').show();
+        } else {
+            $('#formFilter').hide();
+        }
+    }
+
 </script>
