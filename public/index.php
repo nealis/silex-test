@@ -3,6 +3,7 @@
 use Libreria\Controller\LibroController;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,6 +68,12 @@ $app->post ('/delete' ,function(Request $request) use ($app) {
     $controller = new LibroController($app);
     $controller->deleteAction($id);
     return new RedirectResponse('/');
+});
+
+$app->post ('/read', function (Request $request) use ($app) {
+    $controller = new LibroController($app);
+    $result = $controller->readAction();
+    return new JsonResponse($result);
 });
 
 $app->run();

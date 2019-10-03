@@ -5,7 +5,8 @@
     </head>
     <body>
     <h1>Libri</h1>
-    <table>
+    <input type="button" value="refresh" onclick="readBooks()"/>
+    <table id="tabellaLibri">
         <thead>
         <tr>
             <th>Titolo</th>
@@ -13,7 +14,7 @@
             <th>Prezzo</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="tbodyLibri">
         {% for libro in libri %}
             <tr id="bookRow{{ libro.id }}">
                 <td id="titleTd">{{ libro.title }}</td>
@@ -75,5 +76,38 @@
         } else {
             $('#insertNewBook').hide();
         }
+    }
+
+    function readBooks() {
+        $.ajax('/read',
+            {
+                method: 'POST',
+                dataType: 'json',
+                success: function(response) {
+                    $("#tbodyLibri").empty();
+                    $.each(response.data, function(contatore, row) {
+
+                        $("#tbodyLibri").append(
+                            `<tr id="bookRow${row.id}">
+                                <td id="titleTd">${row.title}</td>
+                                <td id="authorTd">${row.author}</td>
+                                <td id="priceTd">${row.price}</td>
+                                <td>
+                                    <form action="/delete" method="POST">
+                                        <input type="text" name="id" value=" ${row.id}" hidden/>
+                                        <input type="submit" value="Cancella"/>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form action="/edit" method="POST">
+                                        <input type="text" name="id_edit" value="${row.id}" hidden/>
+                                        <input id="${row.id}" onClick="toggleForm(${row.id})" type="button" value="Modifica"/>
+                                    </form>
+                                </td>
+                            </tr>`)
+                    });
+                }
+            }
+        )
     }
 </script>

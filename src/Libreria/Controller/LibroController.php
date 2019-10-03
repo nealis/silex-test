@@ -22,8 +22,8 @@ class LibroController
     public function indexAction()
     {
         $model = new Libro($this->app['db']);
-        $data = $model->read();
 
+        $data = $model->read();
         /** @var Environment $twig */
         $twigEnvironment = $this->app['twig'];
         return $twigEnvironment->render(
@@ -83,5 +83,18 @@ class LibroController
         } else{
             return 'Delete non riuscita';
         }
+    }
+
+    public function readAction()
+    {
+        $model = new Libro($this->app['db']);
+        $data = $model->read();
+        $count = count($data);
+        $array = [
+            'success' => $count >= 0,
+            'data' => $data,
+            'errors' => $count <= 0 ? ["Errore in lettura"] : [],
+        ];
+        return $array;
     }
 }
