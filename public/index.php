@@ -10,7 +10,7 @@ use Silex\Provider\DoctrineServiceProvider;
 
 require_once('../vendor/autoload.php');
 $app = new Application();
-
+$app['debug'] = true;
 $app->register(new TwigServiceProvider(), [
     'twig.path' => __DIR__ .'/../views/',
 ]);
@@ -26,12 +26,21 @@ $app->register(new DoctrineServiceProvider(), array(
     ),
 ));
 
+##PAGINE
+
 $app->get('/', function(Request $request) use ($app) {
     $controller = new LibroController($app);
     $risposta = $controller->indexAction();
     return new Response($risposta);
 });
 
+$app->get('/backbone', function(Request $request) use ($app) {
+    $controller = new LibroController($app);
+    $risposta = $controller->indexbackboneAction();
+    return new Response($risposta);
+});
+
+##API
 $app->post('/save', function(Request $request) use ($app){
     $id = $request->request->get('id');
     $titolo = $request->request->get('titolo');
@@ -58,14 +67,14 @@ $app->post ('/read', function (Request $request) use ($app) {
     $page = $request->request->get('page');
     $column = $request->request->get('column');
     $order = $request->request->get('order');
-    if (is_null($filters)) {
-        $filters = [
-            'titolo' => '',
-            'autore' => '',
-        ];
-    }
     $controller = new LibroController($app);
     $result = $controller->readAction($filters, $page, $column, $order);
+    return new JsonResponse($result);
+});
+
+$app->get('/read2', function() use ($app) {
+    $controller = new LibroController($app);
+    $result = $controller->readAction([], 1, 'title', 'ASC');
     return new JsonResponse($result);
 });
 
