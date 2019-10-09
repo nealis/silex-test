@@ -22,9 +22,10 @@ class Libro
     public function read($filters, $page, $column, $order)
     {
         $offset = ($page - 1) * 5;
-        $titolo = $filters['titolo'];
-        $autore = $filters['autore'];
-        $countStatement = $this->connection->fetchAssoc("SELECT COUNT(id) AS count_id FROM libro WHERE title LIKE '$titolo%' AND author LIKE '$autore%'");
+        $titolo = array_key_exists('titolo', $filters) ? $filters['titolo'] : '';
+        $autore = array_key_exists('autore', $filters) ? $filters['autore'] : '';
+        $queryCount = "SELECT COUNT(id) AS count_id FROM libro WHERE title LIKE '$titolo%' AND author LIKE '$autore%'";
+        $countStatement = $this->connection->fetchAssoc($queryCount);
         $countStatement = intval($countStatement['count_id']);
         $selectStatement = "SELECT * FROM libro WHERE title LIKE '$titolo%' AND author LIKE '$autore%' ORDER BY $column $order LIMIT 5 OFFSET $offset";
         return array ($this->connection->fetchAll($selectStatement), $countStatement);
