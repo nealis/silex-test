@@ -137,7 +137,6 @@
     }
 
     function deleteBook(id) {
-        //console.log(id);
         $.ajax('/delete',
             {
                 method: 'POST',
@@ -178,10 +177,6 @@
             })
     }
 
-    $(function() {
-        filterBooks();
-    });
-
     function clearAndHide() {
         $('#titoloFilter').val("");
         $('#autoreFilter').val("");
@@ -214,6 +209,7 @@
     }
 
     $(document).ready(function(){
+        filterBooks();
         $('#titoloFilter').change(function () {
             page = 1;
         });
