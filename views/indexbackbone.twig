@@ -1,0 +1,94 @@
+<html>
+    <head>
+        <title>Prova Silex-Backbone 2019</title>
+        <script src="./js/underscore.js"></script>
+        <script src="./js/jquery.min.js"></script>
+        <script src="./js/backbone.js"></script>
+        <script src="./js/marionette/json2.js"></script>
+        <script src="./js/marionette/backbone.radio.js"></script>
+        <script src="./js/marionette/backbone.marionette.js"></script>
+    </head>
+    <body>
+        <h1>Libri</h1>
+        <input type="text" id="titoloLibro" />
+
+
+        <div id="listaLibri"></div>
+    </body>
+    <script>
+
+        LibroModel = Backbone.Model.extend({
+          initialize: function() {
+            console.log('Nuovo libro creato');
+          },
+          url: '/save',
+          defaults: {
+            title: 'NO TITLE',
+            author: 'Nealis',
+            price: '0'
+          },
+          qualeAutore: function() {
+            alert(this.get('author'));
+            return true;
+          },
+        });
+
+        var LibroView = Marionette.View.extend({
+          template: _.template('<div class="libro"><%= title %>: <%= author %> - <%= price %> €</div>'),
+          initialize: function() {
+            this.listenTo(this.model, "change", this.render);
+          },
+          render: function() {
+            this.$el.html(this.template(this.model.attributes));
+            return this;
+          }
+        });
+
+        var LibroCollection = Backbone.Collection.extend({
+          model: LibroModel,
+          url: '/read2',
+          parse: function(response) {
+            if (response.success) {
+              return response.data;
+            } else {
+              return [];
+            }
+          }
+        });
+
+
+        var EmptyLibriView = Marionette.View.extend({
+          template: 'Nessun libro'
+        });
+
+
+        var istanzaDelLibro = new LibroModel({title: 'HP', author: 'JKR', price: 19.99});
+        var view = new LibroView({model: istanzaDelLibro});
+        view.render();
+        $('h1').append(view.el)
+        var collection = new LibroCollection();
+
+        collection.fetch();
+
+        var LibriListView = Marionette.CollectionView.extend({
+          childView: LibroView,
+          el: '#listaLibri',
+          collection: collection
+        });
+        var libriListView = new LibriListView();
+
+        $('#listaLibri').html(libriListView.render());
+
+        // ESEMPIO FORM (binding fra input e model)
+        var TitoloLibroFormView = Backbone.View.extend({
+          el: '#titoloLibro',
+          events: {
+            input: function(event) {
+              this.model.set('title', event.target.value)
+            }
+          }
+        });
+        new TitoloLibroFormView({ model: istanzaDelLibro })
+
+    </script>
+</html>

@@ -28,6 +28,15 @@ class LibroController
         );
     }
 
+    public function indexbackboneAction()
+    {
+        /** @var Environment $twig */
+        $twigEnvironment = $this->app['twig'];
+        return $twigEnvironment->render(
+            'indexbackbone.twig'
+        );
+    }
+
     public function modificaAction($id, $titolo, $autore, $prezzo)
     {
         $model = new Libro($this->app['db']);

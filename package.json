@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/nealis/silex-test#readme",
   "dependencies": {
-    "jquery": "^3.4.1"
+    "backbone": "^1.4.0",
+    "backbone.marionette": "^4.1.2",
+    "jquery": "^3.4.1",
+    "marionette": "0.0.0",
+    "underscore": "^1.9.1"
   }
 }
