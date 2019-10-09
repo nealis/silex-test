@@ -41,6 +41,7 @@
             <input type="button" onclick="saveBook()" value="Salva" />
         </div>
         <input id="back" type="button" value = "Indietro" onclick="indietroavanti(false)" hidden/><input id="forward" type="button" value = "Avanti" onclick="indietroavanti(true)" hidden/>
+        <p id="pagine" />
     </form>
     </body>
 </html>
@@ -50,6 +51,7 @@
     page = 1;
     defaultOrder = 'ASC';
     defaultColumn = 'title';
+    max_page = 0;
 
     function toggleForm(rowId) {
         if (rowId) {
@@ -93,8 +95,13 @@
                 success: function (response)
                 {
                     records = response.count;
-                    max_page = Math.floor(records/5)+1;
-
+                    if (records%5 == 0){
+                        max_page = records/5;
+                    } else {
+                        max_page = Math.floor(records / 5) + 1;
+                    }
+                    $("#pagine").empty();
+                    $("#pagine").append(page + " di " + max_page);
                     if (page == 1 && max_page != 1) {
                         $('#back').hide();
                         $('#forward').show();
