@@ -26,9 +26,6 @@ $app->register(new DoctrineServiceProvider(), array(
     ),
 ));
 
-$twig = $app['twig'];
-$db = $app['db'];
-
 $app->get('/', function(Request $request) use ($app) {
     $controller = new LibroController($app);
     $risposta = $controller->indexAction();
@@ -58,14 +55,17 @@ $app->post ('/delete' ,function(Request $request) use ($app) {
 
 $app->post ('/read', function (Request $request) use ($app) {
     $filters = $request->request->get('filters');
+    $page = $request->request->get('page');
+    $column = $request->request->get('column');
+    $order = $request->request->get('order');
     if (is_null($filters)) {
         $filters = [
-            'title' => '',
-            'author' => '',
+            'titolo' => '',
+            'autore' => '',
         ];
     }
     $controller = new LibroController($app);
-    $result = $controller->readAction($filters);
+    $result = $controller->readAction($filters, $page, $column, $order);
     return new JsonResponse($result);
 });
 

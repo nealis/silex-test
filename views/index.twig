@@ -17,9 +17,9 @@
     <table id="tabellaLibri">
         <thead>
         <tr>
-            <th>Titolo</th>
-            <th>Autore</th>
-            <th>Prezzo</th>
+            <th id="title" onclick="order('title')"> Titolo</th>
+            <th id="author" onclick="order('author')"> Autore</th>
+            <th id="price" onclick="order('price')"> Prezzo</th>
         </tr>
         </thead>
         <tbody id="tbodyLibri">
@@ -40,11 +40,17 @@
 
             <input type="button" onclick="saveBook()" value="Salva" />
         </div>
+        <input id="back" type="button" value = "Indietro" onclick="indietroavanti(false)" hidden/><input id="forward" type="button" value = "Avanti" onclick="indietroavanti(true)" hidden/>
     </form>
     </body>
 </html>
 
 <script>
+
+    page = 1;
+    defaultOrder = 'ASC';
+    defaultColumn = 'title';
+
     function toggleForm(rowId) {
         if (rowId) {
             var title = $(`#bookRow${rowId} .titleTd`).html();
@@ -67,14 +73,42 @@
         }
     }
 
-    function readBooks() {
+    function filterBooks() {
+        var titolo = $('#titoloFilter').val();
+        var autore = $('#autoreFilter').val();
         $("#tbodyLibri").empty();
         $.ajax('/read',
             {
                 method: 'POST',
                 dataType: 'json',
-                success: function(response)
+                data: {
+                    filters : {
+                        titolo : titolo,
+                        autore : autore,
+                    },
+                    page: page,
+                    order: defaultOrder,
+                    column: defaultColumn,
+                },
+                success: function (response)
                 {
+                    records = response.count;
+                    max_page = Math.floor(records/5)+1;
+
+                    if (page == 1 && max_page != 1) {
+                        $('#back').hide();
+                        $('#forward').show();
+                    } else if (page >= max_page && max_page != 1) {
+                        $('#back').show();
+                        $('#forward').hide();
+                    } else if (max_page == 1) {
+                        $('#back').hide();
+                        $('#forward').hide();
+                    } else {
+                        $('#back').show();
+                        $('#forward').show();
+                    }
+
                     $.each(response.data, function(contatore, row)
                     {
                         $("#tbodyLibri").append(
@@ -95,36 +129,6 @@
         )
     }
 
-    function filterBooks() {
-        var titolo = $('#titoloFilter').val();
-        var autore = $('#autoreFilter').val();
-        $("#tbodyLibri").empty();
-        $.ajax('/read',
-            {
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    filters : {
-                        titolo : titolo,
-                        autore : autore,
-                    }
-                },
-                success: function (response)
-                {
-                    $.each(response.data, function(contatore, row)
-                    {
-                        $("#tbodyLibri").append(
-                            `<tr>
-                                <td>${row.title}</td>
-                                <td>${row.author}</td>
-                                <td>${row.price}</td>
-                            </tr>`)
-                    });
-                }
-            }
-        )
-    }
-
     function deleteBook(id) {
         //console.log(id);
         $.ajax('/delete',
@@ -136,7 +140,7 @@
                 },
                 success: function(response)
                 {
-                    readBooks();
+                    filterBooks();
                 }
 
             })
@@ -162,19 +166,20 @@
                 {
                     $('#id').val("");
                     $('#insertNewBook').hide();
-                    readBooks();
+                    filterBooks();
                 }
             })
     }
 
     $(function() {
-        readBooks();
+        filterBooks();
     });
 
     function clearAndHide() {
-            $('#titoloFilter').val("");
-            $('#autoreFilter').val("");
-        readBooks();
+        $('#titoloFilter').val("");
+        $('#autoreFilter').val("");
+        page = 1;
+        filterBooks();
 
         if ($('#formFilter').is(":hidden")){
             $('#formFilter').show();
@@ -191,4 +196,39 @@
         }
     }
 
+    function indietroavanti(metodo) {
+        if (metodo == true) {
+            page++;
+            filterBooks();
+        } else {
+            page--;
+            filterBooks();
+        }
+    }
+
+    $(document).ready(function(){
+        $('#titoloFilter').change(function () {
+            page = 1;
+        });
+        $('#autoreFilter').change(function () {
+            page = 1;
+        })
+    });
+
+    function order(colonna) {
+        defaultColumn = colonna;
+        if (defaultOrder == 'ASC') {
+            $('#descPic').remove();
+            $('#ascPic').remove();
+            $('#' + defaultColumn).append(`<img id="descPic" src="DESC.png" width=12 height=12/>`);
+            defaultOrder = 'DESC';
+        } else {
+            $('#descPic').remove();
+            $('#ascPic').remove();
+            $('#' + defaultColumn).append(`<img id="ascPic" src="ASC.png" width=12 height=12/>`);
+            defaultOrder = 'ASC';
+        }
+        filterBooks();
+
+    }
 </script>

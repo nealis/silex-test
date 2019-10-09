@@ -31,7 +31,7 @@ class LibroController
     public function modificaAction($id, $titolo, $autore, $prezzo)
     {
         $model = new Libro($this->app['db']);
-        $modificaResult = $model->edit($id,$titolo,$autore,$prezzo);
+        $modificaResult = $model->edit($id, $titolo, $autore, $prezzo);
         $array = [
             'success' => $modificaResult != 0,
             'errors' => $modificaResult == 0,
@@ -39,10 +39,10 @@ class LibroController
         return $array;
     }
 
-    public function insertAction($titolo,$autore,$prezzo)
+    public function insertAction($titolo, $autore, $prezzo)
     {
         $model = new Libro($this->app['db']);
-        $insertResult = $model->insert($titolo,$autore,$prezzo);
+        $insertResult = $model->insert($titolo, $autore, $prezzo);
         $array = [
             'success' => $insertResult != 0,
             'errors' => $insertResult == 0,
@@ -61,28 +61,19 @@ class LibroController
         return $array;
     }
 
-    public function readAction($filters)
+    public function readAction($filters, $page, $column, $order)
     {
+
         $model = new Libro($this->app['db']);
-        $data = $model->read($filters);
+        $data = $model->read($filters, $page, $column, $order);
         $count = count($data);
         $array = [
             'success' => $count >= 0,
-            'data' => $data,
+            'data' => $data[0],
+            'count' => $data[1],
             'errors' => $count <= 0 ? ["Errore in lettura"] : [],
         ];
         return $array;
     }
-
-    public function filterAction($filters)
-    {
-        $model = new Libro($this->app['db']);
-        $filterResult = $model->read($filters);
-        $array = [
-            'success' => $filterResult != 0,
-            'data' => $filterResult,
-            'errors' => $filterResult == 0,
-        ];
-        return $array;
-    }
 }
+
