@@ -10,12 +10,20 @@
     </head>
     <body>
         <h1>Libri</h1>
-        <input type="text" id="titoloLibro" />
 
+        <form id="filterForm">
+            Titolo <input type="text" class="title">
+            Autore <input type="text" class="author">
+            Prezzo <input type="text" class="price">
+            <button type="button" class="filtra">Filtra!</button>
+        </form>
 
+        <hr>
         <div id="listaLibri"></div>
     </body>
     <script>
+
+        Backbone.emulateJSON = true;
 
         LibroModel = Backbone.Model.extend({
           initialize: function() {
@@ -31,16 +39,71 @@
             alert(this.get('author'));
             return true;
           },
+          delete: function() {
+              this.url = '/delete';
+              this.save();
+              this.url = '/save';
+          },
+          update: function() {
+              this.set('titolo', this.get('title'));
+              this.set('autore', this.get('author'));
+              this.set('prezzo', this.get('price'));
+              this.sync('create', this);
+        },
         });
 
+        LibroFormModel = Backbone.Model.extend({
+            defaults: {
+                title: '',
+                author: '',
+                price: ''
+            }
+        });
+
+        LibroFormView = Backbone.View.extend({
+            el: '#filterForm',
+            events: {
+                'click .filtra': 'filtra',
+                'change': function(event) {
+                    this.model.set(event.target.className, event.target.value)
+                }
+            },
+            filtra: function(event) {
+                collection.reload({filters: {titolo: this.model.get('title'), autore: this.model.get('author')}, page: 1, column: 'title', order: 'ASC'});
+            }
+        });
+
+        var filterModel = new LibroFormModel();
+        var filterView = new LibroFormView({ model: filterModel });
+
         var LibroView = Marionette.View.extend({
-          template: _.template('<div class="libro"><%= title %>: <%= author %> - <%= price %> €</div>'),
+          template: '',
+          viewTemplate: '<div class="libro"><button class="modifica">Modifica</button><%= title %>: <%= author %> - <%= price %> €</div>',
+          editTemplate: '<div><button class="save">Salva</button><input type="text" class="title" value="<%= title %>"/><input type="text"class="author" value="<%= author %>"/><input type="text"class="price" value="<%= price %>"/></div>',
           initialize: function() {
             this.listenTo(this.model, "change", this.render);
+            this.template = _.template(this.viewTemplate)
           },
           render: function() {
             this.$el.html(this.template(this.model.attributes));
             return this;
+          },
+          events: {
+            'click .modifica': 'modifica',
+            'click .save': 'save',
+            'change': function(event) {
+              this.model.set(event.target.className, event.target.value)
+            }
+          },
+          modifica: function() {
+            this.template = _.template(this.editTemplate);
+            this.render();
+          },
+          save: function() {
+            // integrazione col backend non ancora funzionante
+            this.template = _.template(this.viewTemplate);
+            this.model.update();
+            this.render();
           }
         });
 
@@ -53,29 +116,26 @@
             } else {
               return [];
             }
+          },
+          reload: function(state) {
+              this.fetch({
+                  type: 'POST',
+                  url: '/read',
+                  reset: true,
+                  data: state
+              })
           }
         });
 
-
-        var EmptyLibriView = Marionette.View.extend({
-          template: 'Nessun libro'
+        var LibriListView = Marionette.CollectionView.extend({
+            childView: LibroView,
+            el: '#listaLibri'
         });
-
 
         var istanzaDelLibro = new LibroModel({title: 'HP', author: 'JKR', price: 19.99});
-        var view = new LibroView({model: istanzaDelLibro});
-        view.render();
-        $('h1').append(view.el)
         var collection = new LibroCollection();
-
         collection.fetch();
-
-        var LibriListView = Marionette.CollectionView.extend({
-          childView: LibroView,
-          el: '#listaLibri',
-          collection: collection
-        });
-        var libriListView = new LibriListView();
+        var libriListView = new LibriListView({collection: collection});
 
         $('#listaLibri').html(libriListView.render());
 
