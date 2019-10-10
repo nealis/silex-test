@@ -11,12 +11,7 @@
     <body>
         <h1>Libri</h1>
 
-        <form id="filterForm">
-            Titolo <input type="text" class="title">
-            Autore <input type="text" class="author">
-            Prezzo <input type="text" class="price">
-            <button type="button" class="filtra">Filtra!</button>
-        </form>
+        <div id="filterForm"></div>
 
         <hr>
         <div id="listaLibri"></div>
@@ -61,15 +56,34 @@
         });
 
         LibroFormView = Backbone.View.extend({
-            el: '#filterForm',
+            initialize: function() {
+                this.listenTo(this.model, "change", this.render);
+            },
+            //el: '#filterForm',
+            template: _.template('<form id="filterForm">\n' +
+                '            Titolo <input type="text" class="title" value=<%= title%> >\n' +
+                '            Autore <input type="text" class="author" value=<%= author%> >\n' +
+                '            Prezzo <input type="text" class="price" value=<%= price%> >\n' +
+                '            <button type="button" class="filtra">Filtra!</button>\n' +
+                '            <button type="button" class="clear">Clear</button>\n' +
+                '        </form>'),
             events: {
                 'click .filtra': 'filtra',
                 'change': function(event) {
                     this.model.set(event.target.className, event.target.value)
-                }
+                },
+                'click .clear': 'clear',
             },
             filtra: function(event) {
                 collection.reload({filters: {titolo: this.model.get('title'), autore: this.model.get('author')}, page: 1, column: 'title', order: 'ASC'});
+            },
+            clear: function (event) {
+                collection.fetch();
+                this.model.set('title',"");
+            },
+            render: function() {
+                this.$el.html(this.template(this.model.attributes));
+                return this;
             }
         });
 
@@ -149,6 +163,11 @@
           }
         });
         new TitoloLibroFormView({ model: istanzaDelLibro })
+
+        $(document).ready(function() {
+            var view = filterView.render();
+            $('#filterForm').html(view.el);
+        })
 
     </script>
 </html>
