@@ -59,7 +59,6 @@
             initialize: function() {
                 this.listenTo(this.model, "change", this.render);
             },
-            //el: '#filterForm',
             template: _.template('<form id="filterForm">\n' +
                 '            Titolo <input type="text" class="title" value=<%= title%> >\n' +
                 '            Autore <input type="text" class="author" value=<%= author%> >\n' +
@@ -78,8 +77,10 @@
                 collection.reload({filters: {titolo: this.model.get('title'), autore: this.model.get('author')}, page: 1, column: 'title', order: 'ASC'});
             },
             clear: function (event) {
+                this.model.set('title','');
+                this.model.set('author','');
+                this.model.set('price','');
                 collection.fetch();
-                this.model.set('title',"");
             },
             render: function() {
                 this.$el.html(this.template(this.model.attributes));
