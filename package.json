@@ -21,6 +21,6 @@
     "backbone.marionette": "^4.1.2",
     "jquery": "^3.5.0",
     "marionette": "0.0.0",
-    "underscore": "^1.9.1"
+    "underscore": "^1.12.1"
   }
 }
